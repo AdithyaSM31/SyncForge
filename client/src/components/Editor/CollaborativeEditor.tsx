@@ -54,8 +54,13 @@ export default function CollaborativeEditor({ ydoc, provider, language, defaultC
     const setupBinding = () => {
       if (!editorRef.current) return;
       
-      // If the doc is empty and we have default code, insert it
-      if (yText.length === 0 && defaultCode) {
+      // Only insert default code if we are the "leader" (lowest clientID)
+      // This prevents duplicate insertions when multiple users switch languages simultaneously
+      const myId = provider.awareness.clientID;
+      const allIds = Array.from(provider.awareness.getStates().keys());
+      const isLeader = allIds.length === 0 || Math.min(...allIds, myId) === myId;
+
+      if (yText.length === 0 && defaultCode && isLeader) {
         yText.insert(0, defaultCode);
       }
 
