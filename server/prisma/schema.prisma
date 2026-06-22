@@ -1,0 +1,32 @@
+// Prisma schema for SyncForge
+// Uses SQLite for local dev — switch datasource to postgresql for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  language  String    @default("javascript")
+  docState  Bytes?    // Serialized Y.Doc binary state
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sessions  Session[]
+}
+
+model Session {
+  id          String    @id @default(cuid())
+  roomId      String
+  room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  username    String
+  cursorColor String
+  joinedAt    DateTime  @default(now())
+  leftAt      DateTime?
+}
