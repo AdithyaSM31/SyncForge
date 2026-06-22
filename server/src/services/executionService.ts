@@ -139,6 +139,19 @@ export async function executeCode(code: string, language: string): Promise<Execu
       timedOut,
     };
   } catch (err: any) {
+    console.error('Execution error:', err);
+    
+    // Fallback for Render Free Tier which doesn't support Docker-in-Docker
+    if (err.message && err.message.includes('connect ENOENT')) {
+      return {
+        output: '',
+        error: '⚠️ Docker sandboxed execution is disabled on this free deployment (Render limits Docker access).\n\nTo enable code execution, you must run this project locally or host it on a VPS with Docker installed.',
+        exitCode: -1,
+        executionTimeMs: Date.now() - startTime,
+        timedOut: false,
+      };
+    }
+
     return {
       output: '',
       error: err.message || 'Execution failed',

@@ -139,8 +139,9 @@ export default function RoomPage() {
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);
     if (roomInfo) {
+      const url = import.meta.env.VITE_API_URL || '';
       socketRef.current.emit('room:language-change', { roomId: roomInfo.id, language: lang });
-      fetch(`/api/rooms/${roomInfo.id}/language`, {
+      fetch(`${url}/api/rooms/${roomInfo.id}/language`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ language: lang }),
@@ -156,7 +157,8 @@ export default function RoomPage() {
     setExecuting(true);
     setExecutionResult(null);
     try {
-      const res = await fetch('/api/execute', {
+      const url = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${url}/api/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, language, roomId: roomInfo.id }),
