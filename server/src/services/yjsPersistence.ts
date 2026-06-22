@@ -13,6 +13,6 @@ export async function loadDocState(roomId: string): Promise<Buffer | null> {
 export async function saveDocState(roomId: string, state: Buffer): Promise<void> {
   await prisma.room.update({
     where: { id: roomId },
-    data: { docState: state },
+    data: { docState: new Uint8Array(state) },
   });
 }
