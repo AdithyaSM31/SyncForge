@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Code2, Users, Zap, Globe, Play, Shield } from 'lucide-react';
+import LineWaves from '../components/Background/LineWaves';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -40,15 +41,24 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Background Effects */}
-      <div className="home-bg-grid" />
-      <div className="home-glow home-glow-1" />
-      <div className="home-glow home-glow-2" />
-      <div className="home-glow home-glow-3" />
-      <div className="home-light-streak home-streak-1" />
-      <div className="home-light-streak home-streak-2" />
-      <div className="home-orb home-orb-1" />
-      <div className="home-orb home-orb-2" />
+      {/* WebGL Background */}
+      <div className="home-bg-canvas">
+        <LineWaves
+          speed={0.3}
+          innerLineCount={32}
+          outerLineCount={36}
+          warpIntensity={1}
+          rotation={-46}
+          edgeFadeWidth={0}
+          colorCycleSpeed={1}
+          brightness={0.3}
+          color1="#0e089c"
+          color2="#5802a9"
+          color3="#00c1e2"
+          enableMouseInteraction={true}
+          mouseInfluence={1.4}
+        />
+      </div>
 
       {/* Navbar */}
       <nav className="home-nav">
