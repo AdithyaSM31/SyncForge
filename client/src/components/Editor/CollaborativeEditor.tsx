@@ -51,18 +51,24 @@ export default function CollaborativeEditor({ ydoc, provider, language, defaultC
     // Get or initialize the shared Y.Text for this specific language
     const yText = ydoc.getText(`monaco-${language}`);
 
-    // If the doc is empty and we have default code, insert it
-    if (yText.length === 0 && defaultCode) {
-      yText.insert(0, defaultCode);
-    }
+    const setupBinding = () => {
+      if (!editorRef.current) return;
+      
+      // If the doc is empty and we have default code, insert it
+      if (yText.length === 0 && defaultCode) {
+        yText.insert(0, defaultCode);
+      }
 
-    // Bind Monaco model to the new Y.Text
-    bindingRef.current = new MonacoBinding(
-      yText,
-      editor.getModel()!,
-      new Set([editor]),
-      provider.awareness,
-    );
+      // Bind Monaco model to the new Y.Text
+      bindingRef.current = new MonacoBinding(
+        yText,
+        editorRef.current.getModel()!,
+        new Set([editorRef.current]),
+        provider.awareness,
+      );
+    };
+
+    provider.onSync(setupBinding);
 
     return () => {
       // Don't destroy here because we want to keep it alive until next language switch

@@ -15,6 +15,7 @@ export class SocketIOProvider {
   synced: boolean = false;
   private _updateHandler: (update: Uint8Array, origin: unknown) => void;
   private _awarenessHandler: (changes: { added: number[]; updated: number[]; removed: number[] }) => void;
+  private _onSyncCallbacks: (() => void)[] = [];
   private _destroyed = false;
 
   constructor(socket: Socket, roomId: string, doc: Y.Doc, userInfo: { name: string; color: string }) {
@@ -51,6 +52,8 @@ export class SocketIOProvider {
       if (this._destroyed) return;
       Y.applyUpdate(this.doc, new Uint8Array(update), this);
       this.synced = true;
+      this._onSyncCallbacks.forEach(cb => cb());
+      this._onSyncCallbacks = [];
     });
 
     this.socket.on('yjs:update', (update: ArrayBuffer) => {
@@ -66,6 +69,14 @@ export class SocketIOProvider {
     // Request initial sync from server
     const sv = Y.encodeStateVector(this.doc);
     this.socket.emit('yjs:sync-request', this.roomId, sv);
+  }
+
+  onSync(cb: () => void) {
+    if (this.synced) {
+      cb();
+    } else {
+      this._onSyncCallbacks.push(cb);
+    }
   }
 
   destroy() {
