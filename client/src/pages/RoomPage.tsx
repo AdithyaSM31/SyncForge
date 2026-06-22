@@ -39,6 +39,7 @@ export default function RoomPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [myColor, setMyColor] = useState('#58a6ff');
   const [language, setLanguage] = useState('javascript');
+  const [activeLanguages, setActiveLanguages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [executing, setExecuting] = useState(false);
@@ -84,6 +85,18 @@ export default function RoomPage() {
         color: response.cursorColor,
       });
       providerRef.current = provider;
+
+      // Track active languages
+      const checkActiveLanguages = () => {
+        const langs = ['javascript', 'python', 'cpp', 'c', 'java', 'go'];
+        const active = langs.filter(l => ydoc.getText(`monaco-${l}`).length > 0);
+        setActiveLanguages(active);
+      };
+      
+      ydoc.on('update', checkActiveLanguages);
+      // Wait a tick for initial sync
+      setTimeout(checkActiveLanguages, 500);
+
       setLoading(false);
     });
 
@@ -151,7 +164,7 @@ export default function RoomPage() {
 
   const handleRun = async () => {
     if (!ydocRef.current || !roomInfo) return;
-    const code = ydocRef.current.getText('monaco').toString();
+    const code = ydocRef.current.getText(`monaco-${language}`).toString();
     if (!code.trim()) return;
 
     setExecuting(true);
@@ -251,6 +264,38 @@ export default function RoomPage() {
             <div className="sidebar-section-title">Language</div>
             <LanguageSelector value={language} onChange={handleLanguageChange} />
           </div>
+          
+          {activeLanguages.length > 0 && (
+            <div className="sidebar-section">
+              <div className="sidebar-section-title">Open Files</div>
+              <div className="active-languages-list">
+                {activeLanguages.map(lang => (
+                  <button 
+                    key={lang}
+                    className={`btn btn-ghost file-tab ${lang === language ? 'active' : ''}`}
+                    onClick={() => handleLanguageChange(lang)}
+                    style={{ 
+                      width: '100%', 
+                      justifyContent: 'flex-start', 
+                      fontSize: '13px', 
+                      padding: '6px 12px',
+                      background: lang === language ? '#264f7830' : 'transparent',
+                      borderLeft: lang === language ? '2px solid #58a6ff' : '2px solid transparent',
+                      borderRadius: '0 4px 4px 0'
+                    }}
+                  >
+                    {lang === 'javascript' ? '🟨 main.js' :
+                     lang === 'python' ? '🐍 main.py' :
+                     lang === 'cpp' ? '⚡ main.cpp' :
+                     lang === 'c' ? '🔧 main.c' :
+                     lang === 'java' ? '☕ Main.java' :
+                     lang === 'go' ? '🐹 main.go' : lang}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="sidebar-section" style={{ flex: 1 }}>
             <div className="sidebar-section-title">Participants</div>
             <ParticipantList users={users} mySocketId={socketRef.current.id || ''} />

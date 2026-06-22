@@ -24,42 +24,53 @@ export default function CollaborativeEditor({ ydoc, provider, language, defaultC
     monaco.editor.setTheme('syncforge-dark');
     editorRef.current = editor;
 
-    // Get or initialize the shared Y.Text
-    const yText = ydoc.getText('monaco');
+    // Focus editor
+    editor.focus();
+    setReady(true);
+  };
+
+  // Bind to Yjs and update language
+  useEffect(() => {
+    if (!ready || !editorRef.current) return;
+    
+    const editor = editorRef.current;
+    const monaco = (window as any).monaco;
+    
+    if (monaco) {
+      const model = editor.getModel();
+      if (model) {
+        monaco.editor.setModelLanguage(model, LANGUAGE_EXTENSIONS[language] || 'plaintext');
+      }
+    }
+
+    // Destroy old binding
+    if (bindingRef.current) {
+      bindingRef.current.destroy();
+    }
+
+    // Get or initialize the shared Y.Text for this specific language
+    const yText = ydoc.getText(`monaco-${language}`);
 
     // If the doc is empty and we have default code, insert it
     if (yText.length === 0 && defaultCode) {
       yText.insert(0, defaultCode);
     }
 
-    // Bind Monaco model to Yjs
-    const binding = new MonacoBinding(
+    // Bind Monaco model to the new Y.Text
+    bindingRef.current = new MonacoBinding(
       yText,
       editor.getModel()!,
       new Set([editor]),
       provider.awareness,
     );
-    bindingRef.current = binding;
-    setReady(true);
 
-    // Focus editor
-    editor.focus();
-  };
+    return () => {
+      // Don't destroy here because we want to keep it alive until next language switch
+      // Actually we should clean up if unmounting, but the next effect run will clean it up anyway
+    };
+  }, [language, ready, ydoc, provider, defaultCode]);
 
-  // Update Monaco language when it changes
-  useEffect(() => {
-    if (editorRef.current) {
-      const model = editorRef.current.getModel();
-      if (model) {
-        const monaco = (window as any).monaco;
-        if (monaco) {
-          monaco.editor.setModelLanguage(model, LANGUAGE_EXTENSIONS[language] || 'plaintext');
-        }
-      }
-    }
-  }, [language]);
-
-  // Clean up binding on unmount
+  // Final cleanup
   useEffect(() => {
     return () => {
       bindingRef.current?.destroy();
