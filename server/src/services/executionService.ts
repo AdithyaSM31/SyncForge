@@ -51,7 +51,7 @@ export interface ExecutionResult {
   timedOut: boolean;
 }
 
-export async function executeCode(code: string, language: string): Promise<ExecutionResult> {
+export async function executeCode(code: string, language: string, stdin: string = ''): Promise<ExecutionResult> {
   const config = LANGUAGE_CONFIGS[language];
   if (!config) {
     throw new Error(`Unsupported language: ${language}`);
@@ -99,7 +99,7 @@ export async function executeCode(code: string, language: string): Promise<Execu
     // Create container with strict security limits
     container = await docker.createContainer({
       Image: imageName,
-      Cmd: ['sh', '-c', `timeout ${timeoutSec} sh -c '${config.runCmd.replace(/'/g, "'\\''")}'`],
+      Cmd: ['sh', '-c', `timeout ${timeoutSec} sh -c '${config.runCmd.replace(/'/g, "'\\''")}' < /code/input.txt`],
       WorkingDir: '/code',
       NetworkDisabled: true,
       HostConfig: {
@@ -120,6 +120,10 @@ export async function executeCode(code: string, language: string): Promise<Execu
     // Write code to container
     const tar = createTarBuffer(config.fileName, code);
     await container.putArchive(tar, { path: '/code' });
+
+    // Write stdin to container
+    const stdinTar = createTarBuffer('input.txt', stdin);
+    await container.putArchive(stdinTar, { path: '/code' });
 
     // Start and wait
     await container.start();
@@ -145,7 +149,7 @@ export async function executeCode(code: string, language: string): Promise<Execu
     if (err.message && err.message.includes('connect ENOENT')) {
       // Check if JDoodle credentials are provided as a workaround
       if (process.env.JDOODLE_CLIENT_ID && process.env.JDOODLE_CLIENT_SECRET) {
-        return executeWithJDoodle(code, language, startTime);
+        return executeWithJDoodle(code, language, stdin, startTime);
       }
 
       return {
@@ -177,7 +181,7 @@ export async function executeCode(code: string, language: string): Promise<Execu
 // ==========================================
 // JDoodle API Fallback for Render Deployment
 // ==========================================
-async function executeWithJDoodle(code: string, language: string, startTime: number): Promise<ExecutionResult> {
+async function executeWithJDoodle(code: string, language: string, stdin: string, startTime: number): Promise<ExecutionResult> {
   const jdoodleLangMap: Record<string, { language: string; versionIndex: string }> = {
     javascript: { language: 'nodejs', versionIndex: '4' }, // Node 17
     python: { language: 'python3', versionIndex: '4' },   // Python 3.9
@@ -200,6 +204,7 @@ async function executeWithJDoodle(code: string, language: string, startTime: num
         clientId: process.env.JDOODLE_CLIENT_ID,
         clientSecret: process.env.JDOODLE_CLIENT_SECRET,
         script: code,
+        stdin: stdin,
         language: map.language,
         versionIndex: map.versionIndex,
       }),

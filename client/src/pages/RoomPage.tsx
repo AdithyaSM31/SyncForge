@@ -39,6 +39,7 @@ export default function RoomPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [myColor, setMyColor] = useState('#58a6ff');
   const [language, setLanguage] = useState('javascript');
+  const [stdin, setStdin] = useState('');
   const [activeLanguages, setActiveLanguages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -94,8 +95,18 @@ export default function RoomPage() {
       };
       
       ydoc.on('update', checkActiveLanguages);
-      // Wait a tick for initial sync
-      setTimeout(checkActiveLanguages, 500);
+      
+      // Wait for provider sync, then insert default code for the initial language if it's completely empty
+      // and if we are the one who created the room (the only person in it).
+      // We check this by seeing if our clientID is the only one.
+      provider.onSync(() => {
+        const yText = ydoc.getText(`monaco-${response.room.language}`);
+        const allIds = Array.from(provider.awareness.getStates().keys());
+        if (yText.length === 0 && DEFAULT_CODE[response.room.language] && allIds.length <= 1) {
+          yText.insert(0, DEFAULT_CODE[response.room.language]);
+        }
+        checkActiveLanguages();
+      });
 
       setLoading(false);
     });
@@ -151,6 +162,16 @@ export default function RoomPage() {
 
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);
+    
+    // Explicitly insert default code if the user clicks the language
+    // and it hasn't been used yet.
+    if (ydocRef.current) {
+      const yText = ydocRef.current.getText(`monaco-${lang}`);
+      if (yText.length === 0 && DEFAULT_CODE[lang]) {
+        yText.insert(0, DEFAULT_CODE[lang]);
+      }
+    }
+
     if (roomInfo) {
       const url = import.meta.env.VITE_API_URL || '';
       socketRef.current.emit('room:language-change', { roomId: roomInfo.id, language: lang });
@@ -174,7 +195,7 @@ export default function RoomPage() {
       const res = await fetch(`${url}/api/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, language, roomId: roomInfo.id }),
+        body: JSON.stringify({ code, language, stdin, roomId: roomInfo.id }),
       });
       const result = await res.json();
       setExecutionResult(result);
@@ -323,7 +344,13 @@ export default function RoomPage() {
               />
             )}
           </div>
-          <OutputPanel result={executionResult} executing={executing} language={language} />
+          <OutputPanel 
+            result={executionResult} 
+            executing={executing} 
+            language={language}
+            stdin={stdin}
+            onStdinChange={setStdin}
+          />
         </div>
       </div>
 

@@ -8,7 +8,7 @@ export const executeRouter = Router();
 // Execute code
 executeRouter.post('/', executionLimiter, async (req, res) => {
   try {
-    const { code, language, roomId } = req.body;
+    const { code, language, stdin, roomId } = req.body;
 
     // Use provided code or pull from the live Y.Doc
     const codeToRun = code || (roomId ? getDocText(roomId) : '');
@@ -28,7 +28,7 @@ executeRouter.post('/', executionLimiter, async (req, res) => {
       return;
     }
 
-    const result = await executeCode(codeToRun, language);
+    const result = await executeCode(codeToRun, language, stdin);
     res.json(result);
   } catch (err: any) {
     console.error('Execute error:', err);
