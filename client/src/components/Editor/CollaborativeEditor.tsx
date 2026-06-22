@@ -64,6 +64,11 @@ export default function CollaborativeEditor({ ydoc, provider, language, defaultC
         yText.insert(0, defaultCode);
       }
 
+      // CRITICAL FIX: The editor model might still contain text from the previous language.
+      // We MUST overwrite it with the exact Y.Text content before binding, 
+      // otherwise y-monaco will try to merge the leftover text into the new language buffer!
+      editorRef.current.getModel()!.setValue(yText.toString());
+
       // Bind Monaco model to the new Y.Text
       bindingRef.current = new MonacoBinding(
         yText,
