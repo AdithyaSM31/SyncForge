@@ -143,9 +143,14 @@ export async function executeCode(code: string, language: string): Promise<Execu
     
     // Fallback for Render Free Tier which doesn't support Docker-in-Docker
     if (err.message && err.message.includes('connect ENOENT')) {
+      // Check if JDoodle credentials are provided as a workaround
+      if (process.env.JDOODLE_CLIENT_ID && process.env.JDOODLE_CLIENT_SECRET) {
+        return executeWithJDoodle(code, language, startTime);
+      }
+
       return {
         output: '',
-        error: '⚠️ Docker sandboxed execution is disabled on this free deployment (Render limits Docker access).\n\nTo enable code execution, you must run this project locally or host it on a VPS with Docker installed.',
+        error: '⚠️ Docker execution is disabled on Render.\n\n💡 WORKAROUND: Create a free JDoodle API account and add JDOODLE_CLIENT_ID and JDOODLE_CLIENT_SECRET to your Render environment variables to enable cloud execution!',
         exitCode: -1,
         executionTimeMs: Date.now() - startTime,
         timedOut: false,
@@ -166,6 +171,55 @@ export async function executeCode(code: string, language: string): Promise<Execu
         await container.remove({ force: true });
       } catch {}
     }
+  }
+}
+
+// ==========================================
+// JDoodle API Fallback for Render Deployment
+// ==========================================
+async function executeWithJDoodle(code: string, language: string, startTime: number): Promise<ExecutionResult> {
+  const jdoodleLangMap: Record<string, { language: string; versionIndex: string }> = {
+    javascript: { language: 'nodejs', versionIndex: '4' }, // Node 17
+    python: { language: 'python3', versionIndex: '4' },   // Python 3.9
+    cpp: { language: 'cpp17', versionIndex: '1' },        // C++ 17
+    c: { language: 'c', versionIndex: '5' },              // GCC
+    java: { language: 'java', versionIndex: '4' },        // JDK 17
+    go: { language: 'go', versionIndex: '4' },            // Go 1.17
+  };
+
+  const map = jdoodleLangMap[language];
+  if (!map) {
+    return { output: '', error: `Language ${language} not supported by JDoodle fallback.`, exitCode: 1, executionTimeMs: Date.now() - startTime, timedOut: false };
+  }
+
+  try {
+    const response = await fetch('https://api.jdoodle.com/v1/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientId: process.env.JDOODLE_CLIENT_ID,
+        clientSecret: process.env.JDOODLE_CLIENT_SECRET,
+        script: code,
+        language: map.language,
+        versionIndex: map.versionIndex,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      return { output: '', error: data.error, exitCode: 1, executionTimeMs: Date.now() - startTime, timedOut: false };
+    }
+
+    return {
+      output: data.output,
+      error: data.memory === null ? 'Execution Timeout or Error' : null,
+      exitCode: data.statusCode === 200 ? 0 : 1,
+      executionTimeMs: Date.now() - startTime,
+      timedOut: data.memory === null,
+    };
+  } catch (err: any) {
+    return { output: '', error: `JDoodle API Error: ${err.message}`, exitCode: 1, executionTimeMs: Date.now() - startTime, timedOut: false };
   }
 }
 
