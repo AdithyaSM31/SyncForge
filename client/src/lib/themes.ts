@@ -60,20 +60,21 @@ export const DEFAULT_CODE: Record<string, string> = {
   javascript: `// Online JavaScript compiler to run JavaScript program online
 // Start coding collaboratively...
 
-console.log("Start small. Ship something.");
+console.log("Welcome to SyncForge!");
 `,
   python: `# Online Python compiler to run Python program online
 # Start coding collaboratively...
 
-print("Start small. Ship something.")
+print("Welcome to SyncForge!")
 `,
   cpp: `// Online C++ compiler to run C++ program online
 // Start coding collaboratively...
 
 #include <iostream>
+using namespace std;
 
 int main() {
-    std::cout << "Start small. Ship something.";
+    cout << "Welcome to SyncForge!";
     return 0;
 }
 `,
@@ -83,7 +84,7 @@ int main() {
 #include <stdio.h>
 
 int main() {
-    printf("Start small. Ship something.");
+    printf("Welcome to SyncForge!");
     return 0;
 }
 `,
@@ -92,7 +93,7 @@ int main() {
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Start small. Ship something.");
+        System.out.println("Welcome to SyncForge!");
     }
 }
 `,
@@ -104,7 +105,7 @@ package main
 import "fmt"
 
 func main() {
-    fmt.Println("Start small. Ship something.")
+    fmt.Println("Welcome to SyncForge!")
 }
 `,
 };
