@@ -51,7 +51,7 @@ export default function HomePage() {
           rotation={-46}
           edgeFadeWidth={0}
           colorCycleSpeed={1}
-          brightness={0.3}
+          brightness={0.15}
           color1="#0e089c"
           color2="#5802a9"
           color3="#00c1e2"
