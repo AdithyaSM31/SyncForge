@@ -526,7 +526,8 @@ a:hover {
   font-weight: 900;
   font-style: italic;
   letter-spacing: -3px;
-  line-height: 1;
+  line-height: 1.2;
+  padding-bottom: 4px;
   background: linear-gradient(135deg, #a78bfa 0%, #818cf8 25%, #60a5fa 50%, #c084fc 75%, #f472b6 100%);
   background-size: 300% 300%;
   -webkit-background-clip: text;
