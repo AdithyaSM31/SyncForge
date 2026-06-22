@@ -12,3 +12,5 @@ services:
         value: 3001
       - key: REDIS_ENABLED
         value: "false"
+      - key: DATABASE_URL
+        value: "file:./data.db"
