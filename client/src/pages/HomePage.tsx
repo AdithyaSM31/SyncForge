@@ -40,47 +40,88 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
+      {/* Background Effects */}
       <div className="home-bg-grid" />
       <div className="home-glow home-glow-1" />
       <div className="home-glow home-glow-2" />
+      <div className="home-glow home-glow-3" />
+      <div className="home-light-streak home-streak-1" />
+      <div className="home-light-streak home-streak-2" />
+      <div className="home-orb home-orb-1" />
+      <div className="home-orb home-orb-2" />
 
+      {/* Navbar */}
+      <nav className="home-nav">
+        <div className="home-nav-logo">
+          <Code2 size={20} />
+          <span>SyncForge</span>
+        </div>
+        <div className="home-nav-links">
+          <a href="#features">Features</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); setShowCreate(true); }}>Get Started</a>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
       <div className="home-content">
+        <div className="home-pill">
+          <span className="home-pill-dot" />
+          Real-time. Collaborative. Effortless.
+        </div>
+
         <h1 className="home-logo">SyncForge</h1>
+
         <p className="home-tagline">
-          <strong>Real-time collaborative code editor</strong> with live multi-user sync,
-          shared cursors, and sandboxed execution.
+          Real-time collaborative code editor with live multi-user sync,
+          <strong> shared cursors</strong>, and sandboxed execution.
         </p>
 
         <div className="home-actions">
-          <button className="btn btn-primary btn-lg" onClick={() => setShowCreate(true)}>
-            <Code2 size={20} /> Create Room
+          <button className="btn btn-hero-primary" onClick={() => setShowCreate(true)}>
+            <Code2 size={18} /> Create Room
           </button>
-          <button className="btn btn-secondary btn-lg" onClick={() => setShowJoin(true)}>
-            <Users size={20} /> Join Room
+          <button className="btn btn-hero-secondary" onClick={() => setShowJoin(true)}>
+            <Users size={18} /> Join Room
           </button>
         </div>
 
-        <div className="home-card">
+        {/* Feature Cards */}
+        <div id="features" className="home-card">
           <div className="feature-card">
-            <div className="feature-card-icon" style={{ background: 'rgba(88,166,255,0.1)', color: '#58a6ff' }}>
-              <Zap size={20} />
+            <div className="feature-card-icon feature-icon-blue">
+              <Zap size={22} />
             </div>
-            <h3>CRDT-Powered Sync</h3>
-            <p>Conflict-free replicated data types ensure edits merge perfectly — no conflicts, ever.</p>
+            <div className="feature-card-content">
+              <h3>CRDT-Powered Sync</h3>
+              <p>Conflict-free replicated data types ensure edits merge perfectly — no conflicts, ever.</p>
+            </div>
+            <div className="feature-badge feature-badge-blue">
+              <span className="feature-badge-dot" /> Live Sync
+            </div>
           </div>
           <div className="feature-card">
-            <div className="feature-card-icon" style={{ background: 'rgba(168,85,247,0.1)', color: '#a855f7' }}>
-              <Globe size={20} />
+            <div className="feature-card-icon feature-icon-purple">
+              <Globe size={22} />
             </div>
-            <h3>Horizontally Scalable</h3>
-            <p>Redis pub/sub broadcasts across Node.js instances — scales to thousands of users.</p>
+            <div className="feature-card-content">
+              <h3>Horizontally Scalable</h3>
+              <p>Redis pub/sub broadcasts across Node.js instances — scales to thousands of users.</p>
+            </div>
+            <div className="feature-badge feature-badge-green">
+              <span className="feature-badge-dot" /> High Availability
+            </div>
           </div>
           <div className="feature-card">
-            <div className="feature-card-icon" style={{ background: 'rgba(63,185,80,0.1)', color: '#3fb950' }}>
-              <Shield size={20} />
+            <div className="feature-card-icon feature-icon-cyan">
+              <Shield size={22} />
             </div>
-            <h3>Sandboxed Execution</h3>
-            <p>Docker containers with strict resource limits run your code safely in isolation.</p>
+            <div className="feature-card-content">
+              <h3>Sandboxed Execution</h3>
+              <p>Docker containers with strict resource limits run your code safely in isolation.</p>
+            </div>
+            <div className="feature-badge feature-badge-orange">
+              <span className="feature-badge-dot" /> Secure by Default
+            </div>
           </div>
         </div>
       </div>
