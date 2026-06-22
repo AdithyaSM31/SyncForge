@@ -205,7 +205,7 @@ async function executeWithJDoodle(code: string, language: string, startTime: num
       }),
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as any;
 
     if (data.error) {
       return { output: '', error: data.error, exitCode: 1, executionTimeMs: Date.now() - startTime, timedOut: false };
