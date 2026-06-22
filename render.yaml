@@ -2,6 +2,7 @@ services:
   - type: web
     name: syncforge-backend
     env: node
+    plan: free
     buildCommand: npm install && cd server && npm install && npx prisma generate && npx prisma db push && npm run build
     startCommand: cd server && npm start
     envVars:
