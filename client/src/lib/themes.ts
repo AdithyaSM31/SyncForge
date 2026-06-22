@@ -57,104 +57,54 @@ export const LANGUAGE_EXTENSIONS: Record<string, string> = {
 };
 
 export const DEFAULT_CODE: Record<string, string> = {
-  javascript: `// Welcome to SyncForge! 🚀
+  javascript: `// Online JavaScript compiler to run JavaScript program online
 // Start coding collaboratively...
 
-function fibonacci(n) {
-  if (n <= 1) return n;
-  return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-console.log("Fibonacci sequence:");
-for (let i = 0; i < 10; i++) {
-  console.log(\`  fib(\${i}) = \${fibonacci(i)}\`);
-}
+console.log("Start small. Ship something.");
 `,
-  python: `# Welcome to SyncForge! 🚀
+  python: `# Online Python compiler to run Python program online
 # Start coding collaboratively...
 
-def fibonacci(n):
-    if n <= 1:
-        return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
-
-print("Fibonacci sequence:")
-for i in range(10):
-    print(f"  fib({i}) = {fibonacci(i)}")
+print("Start small. Ship something.")
 `,
-  cpp: `// Welcome to SyncForge! 🚀
+  cpp: `// Online C++ compiler to run C++ program online
 // Start coding collaboratively...
 
 #include <iostream>
-using namespace std;
-
-int fibonacci(int n) {
-    if (n <= 1) return n;
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
 
 int main() {
-    cout << "Fibonacci sequence:" << endl;
-    for (int i = 0; i < 10; i++) {
-        cout << "  fib(" << i << ") = " << fibonacci(i) << endl;
-    }
+    std::cout << "Start small. Ship something.";
     return 0;
 }
 `,
-  c: `/* Welcome to SyncForge! 🚀 */
+  c: `/* Online C compiler to run C program online */
 /* Start coding collaboratively... */
 
 #include <stdio.h>
 
-int fibonacci(int n) {
-    if (n <= 1) return n;
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
 int main() {
-    printf("Fibonacci sequence:\\n");
-    for (int i = 0; i < 10; i++) {
-        printf("  fib(%d) = %d\\n", i, fibonacci(i));
-    }
+    printf("Start small. Ship something.");
     return 0;
 }
 `,
-  java: `// Welcome to SyncForge! 🚀
+  java: `// Online Java compiler to run Java program online
 // Start coding collaboratively...
 
 public class Main {
-    static int fibonacci(int n) {
-        if (n <= 1) return n;
-        return fibonacci(n - 1) + fibonacci(n - 2);
-    }
-
     public static void main(String[] args) {
-        System.out.println("Fibonacci sequence:");
-        for (int i = 0; i < 10; i++) {
-            System.out.println("  fib(" + i + ") = " + fibonacci(i));
-        }
+        System.out.println("Start small. Ship something.");
     }
 }
 `,
-  go: `// Welcome to SyncForge! 🚀
+  go: `// Online Go compiler to run Go program online
 // Start coding collaboratively...
 
 package main
 
 import "fmt"
 
-func fibonacci(n int) int {
-    if n <= 1 {
-        return n
-    }
-    return fibonacci(n-1) + fibonacci(n-2)
-}
-
 func main() {
-    fmt.Println("Fibonacci sequence:")
-    for i := 0; i < 10; i++ {
-        fmt.Printf("  fib(%d) = %d\\n", i, fibonacci(i))
-    }
+    fmt.Println("Start small. Ship something.")
 }
 `,
 };
