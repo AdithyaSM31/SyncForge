@@ -213,7 +213,7 @@ async function executeWithJDoodle(code: string, language: string, startTime: num
 
     return {
       output: data.output,
-      error: data.memory === null ? 'Execution Timeout or Error' : null,
+      error: data.memory === null ? 'Execution Timeout or Error' : '',
       exitCode: data.statusCode === 200 ? 0 : 1,
       executionTimeMs: Date.now() - startTime,
       timedOut: data.memory === null,
