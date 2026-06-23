@@ -1,4 +1,5 @@
 import { Terminal, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 interface ExecutionResult {
   output: string;
@@ -7,8 +8,6 @@ interface ExecutionResult {
   executionTimeMs: number;
   timedOut: boolean;
 }
-
-import { useState } from 'react';
 
 interface Props {
   result: ExecutionResult | null;
@@ -23,46 +22,32 @@ export default function OutputPanel({ result, executing, language, stdin = '', o
 
   return (
     <div className="output-panel">
-      <div className="output-header">
-        <div className="output-header-left" style={{ display: 'flex', gap: 8 }}>
-          <button 
-            className={`btn btn-ghost file-tab ${activeTab === 'output' ? 'active' : ''}`}
-            onClick={() => setActiveTab('output')}
-            style={{ padding: '4px 12px', background: activeTab === 'output' ? '#264f7830' : 'transparent' }}
-          >
-            <Terminal size={14} style={{ color: 'var(--text-muted)' }} />
-            <span className="output-title" style={{ marginLeft: 6 }}>Output</span>
-          </button>
-          <button 
-            className={`btn btn-ghost file-tab ${activeTab === 'input' ? 'active' : ''}`}
-            onClick={() => setActiveTab('input')}
-            style={{ padding: '4px 12px', background: activeTab === 'input' ? '#264f7830' : 'transparent' }}
-          >
-            <span className="output-title">Input</span>
-          </button>
-        </div>
+      {/* Mobile Tabs Header */}
+      <div className="output-mobile-tabs">
+        <button 
+          className={`btn btn-ghost file-tab ${activeTab === 'output' ? 'active' : ''}`}
+          onClick={() => setActiveTab('output')}
+        >
+          <Terminal size={14} style={{ color: 'var(--text-muted)' }} />
+          <span className="output-title" style={{ marginLeft: 6 }}>Output</span>
+        </button>
+        <button 
+          className={`btn btn-ghost file-tab ${activeTab === 'input' ? 'active' : ''}`}
+          onClick={() => setActiveTab('input')}
+        >
+          <span className="output-title">Input</span>
+        </button>
       </div>
 
-      <div className="output-body" style={{ display: 'flex', flexDirection: 'column', padding: activeTab === 'input' ? 0 : undefined }}>
-        {activeTab === 'input' ? (
-          <textarea
-            placeholder="Provide standard input (stdin) here..."
-            value={stdin}
-            onChange={(e) => onStdinChange?.(e.target.value)}
-            style={{ 
-              flex: 1, 
-              background: '#0d1117', 
-              color: '#e6edf3', 
-              border: 'none', 
-              padding: '16px',
-              fontFamily: 'monospace',
-              fontSize: '13px',
-              resize: 'none',
-              outline: 'none'
-            }}
-          />
-        ) : (
-          <>
+      <div className="output-desktop-layout">
+        {/* Output Pane */}
+        <div className={`output-pane ${activeTab === 'output' ? 'mobile-active' : ''}`}>
+          <div className="output-header desktop-only">
+            <Terminal size={14} style={{ color: 'var(--text-muted)' }} />
+            <span className="output-title" style={{ marginLeft: 6 }}>Output</span>
+          </div>
+          
+          <div className="output-body">
             {executing && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span className="spinner" />
@@ -83,30 +68,45 @@ export default function OutputPanel({ result, executing, language, stdin = '', o
                 )}
               </>
             )}
-          </>
-        )}
-      </div>
+          </div>
 
-      {!executing && result && (
-        <div className="output-meta">
-          {result.timedOut ? (
-            <span className="output-meta-badge timeout">
-              <AlertTriangle size={12} /> Timed Out
-            </span>
-          ) : result.exitCode === 0 ? (
-            <span className="output-meta-badge success">
-              <CheckCircle size={12} /> Exit 0
-            </span>
-          ) : (
-            <span className="output-meta-badge error">
-              <XCircle size={12} /> Exit {result.exitCode}
-            </span>
+          {!executing && result && (
+            <div className="output-meta">
+              {result.timedOut ? (
+                <span className="output-meta-badge timeout">
+                  <AlertTriangle size={12} /> Timed Out
+                </span>
+              ) : result.exitCode === 0 ? (
+                <span className="output-meta-badge success">
+                  <CheckCircle size={12} /> Exit 0
+                </span>
+              ) : (
+                <span className="output-meta-badge error">
+                  <XCircle size={12} /> Exit {result.exitCode}
+                </span>
+              )}
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Clock size={11} /> {result.executionTimeMs}ms
+              </span>
+            </div>
           )}
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Clock size={11} /> {result.executionTimeMs}ms
-          </span>
         </div>
-      )}
+
+        {/* Input Pane */}
+        <div className={`input-pane ${activeTab === 'input' ? 'mobile-active' : ''}`}>
+          <div className="output-header desktop-only">
+            <span className="output-title">Input</span>
+          </div>
+          <div className="output-body" style={{ padding: 0 }}>
+            <textarea
+              placeholder="Provide standard input (stdin) here..."
+              value={stdin}
+              onChange={(e) => onStdinChange?.(e.target.value)}
+              className="input-textarea"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

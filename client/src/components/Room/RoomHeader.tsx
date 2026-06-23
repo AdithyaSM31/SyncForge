@@ -1,4 +1,4 @@
-import { Play, Copy, Check, Share2 } from 'lucide-react';
+import { Play, Copy, Check, Share2, Menu } from 'lucide-react';
 
 interface User {
   socketId: string;
@@ -15,15 +15,19 @@ interface Props {
   language: string;
   copied: boolean;
   onCopyLink: () => void;
+  onMenuClick?: () => void;
 }
 
-export default function RoomHeader({ roomName, roomSlug, users, onRun, executing, language, copied, onCopyLink }: Props) {
+export default function RoomHeader({ roomName, roomSlug, users, onRun, executing, language, copied, onCopyLink, onMenuClick }: Props) {
   return (
     <div className="room-header">
       <div className="room-header-left">
+        <button className="btn btn-ghost btn-icon mobile-menu-btn" onClick={onMenuClick}>
+          <Menu size={18} />
+        </button>
         <span className="room-header-logo">SyncForge</span>
-        <span className="room-header-divider" />
-        <span className="room-header-name">{roomName}</span>
+        <span className="room-header-divider desktop-only" />
+        <span className="room-header-name desktop-only">{roomName}</span>
       </div>
 
       <div className="room-header-right">

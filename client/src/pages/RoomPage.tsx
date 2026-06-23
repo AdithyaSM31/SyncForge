@@ -50,6 +50,7 @@ export default function RoomPage() {
   const [needsNickname, setNeedsNickname] = useState(false);
   const [nicknameInput, setNicknameInput] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const ydocRef = useRef<Y.Doc | null>(null);
   const providerRef = useRef<SocketIOProvider | null>(null);
@@ -276,11 +277,17 @@ export default function RoomPage() {
         language={language}
         copied={copied}
         onCopyLink={handleCopyLink}
+        onMenuClick={() => setShowSidebar(!showSidebar)}
       />
 
       <div className="room-body">
+        {/* Mobile Sidebar Overlay */}
+        {showSidebar && (
+          <div className="sidebar-overlay" onClick={() => setShowSidebar(false)} />
+        )}
+        
         {/* Sidebar */}
-        <div className="sidebar">
+        <div className={`sidebar ${showSidebar ? 'open' : ''}`}>
           <div className="sidebar-section">
             <div className="sidebar-section-title">Language</div>
             <LanguageSelector value={language} onChange={handleLanguageChange} />
