@@ -8,10 +8,13 @@ A browser-based coding platform with live multi-user sync, shared cursors, and s
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
+![Capacitor](https://img.shields.io/badge/Capacitor-Android-53b9ff?logo=capacitor&logoColor=white)
 ![Socket.io](https://img.shields.io/badge/Socket.io-4.8-010101?logo=socketdotio&logoColor=white)
 ![Yjs](https://img.shields.io/badge/Yjs-CRDT-6366f1)
 ![Docker](https://img.shields.io/badge/Docker-Sandbox-2496ED?logo=docker&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-Pub%2FSub-DC382D?logo=redis&logoColor=white)
+
+### 🌍 [Live Web Demo](https://sync-forge-client.vercel.app/)
+*(Backend running on Render, may take 50s to wake up from cold boot)*
 
 </div>
 
@@ -43,9 +46,10 @@ A browser-based coding platform with live multi-user sync, shared cursors, and s
 | **Shared Cursors** | See collaborators' cursors and selections in real-time via Awareness API |
 | **6 Languages** | JavaScript, Python, C++, C, Java, Go |
 | **Docker Sandbox** | Isolated execution with `--cap-drop=ALL`, `--network=none`, memory/CPU/PID limits |
-| **Redis Pub/Sub** | Horizontally scalable WebSocket layer via `@socket.io/redis-adapter` |
+| **Native Android** | Cross-platform compatibility using Capacitor with mobile edge-to-edge layout |
+| **WebGL UI** | Hardware-accelerated `LineWaves` interactive background shader |
 | **Room System** | Create/join rooms with shareable codes, persistent document state |
-| **Premium UI** | VS Code-inspired dark theme with glassmorphism, animations, and JetBrains Mono |
+| **Mobile-First** | Split-pane tabbed layouts, sliding sidebar drawers, and status bar safe zones |
 
 ## 🚀 Quick Start
 
@@ -105,13 +109,13 @@ If custom images aren't built, the server auto-pulls public base images (`node:2
 | Layer | Technology |
 |-------|-----------|
 | **Frontend** | React 19, Vite 6, TypeScript, Monaco Editor |
+| **Mobile** | Ionic Capacitor v6 (Android APK distribution) |
 | **CRDT Engine** | Yjs + y-monaco + y-protocols (Awareness) |
 | **Transport** | Socket.io with custom Yjs provider |
 | **Backend** | Node.js, Express, Socket.io |
 | **Database** | Prisma ORM + SQLite (→ PostgreSQL) |
-| **Scaling** | Redis Pub/Sub + `@socket.io/redis-adapter` |
 | **Execution** | Docker (dockerode) with security hardening |
-| **Styling** | Vanilla CSS with custom design system |
+| **Styling** | Vanilla CSS + WebGL (ogl) with custom design system |
 
 ## 📁 Project Structure
 
