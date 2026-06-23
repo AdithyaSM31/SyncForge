@@ -1,4 +1,4 @@
-import { Play, Copy, Check, Share2, Menu } from 'lucide-react';
+import { Play, Copy, Check, Share2, Menu, LogOut } from 'lucide-react';
 
 interface User {
   socketId: string;
@@ -16,9 +16,10 @@ interface Props {
   copied: boolean;
   onCopyLink: () => void;
   onMenuClick?: () => void;
+  onLeave: () => void;
 }
 
-export default function RoomHeader({ roomName, roomSlug, users, onRun, executing, language, copied, onCopyLink, onMenuClick }: Props) {
+export default function RoomHeader({ roomName, roomSlug, users, onRun, executing, language, copied, onCopyLink, onMenuClick, onLeave }: Props) {
   return (
     <div className="room-header">
       <div className="room-header-left">
@@ -45,6 +46,12 @@ export default function RoomHeader({ roomName, roomSlug, users, onRun, executing
             </div>
           ))}
         </div>
+
+        {/* Leave Room button */}
+        <button className="btn btn-ghost btn-sm" onClick={onLeave} title="Leave room">
+          <LogOut size={14} />
+          <span className="desktop-only">Leave</span>
+        </button>
 
         {/* Copy link button */}
         <button className="btn btn-ghost btn-sm" onClick={onCopyLink} title="Copy share link">

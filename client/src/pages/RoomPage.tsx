@@ -228,6 +228,10 @@ export default function RoomPage() {
     }
   };
 
+  const handleLeave = () => {
+    navigate('/');
+  };
+
   // Nickname prompt
   if (needsNickname) {
     return (
@@ -287,6 +291,7 @@ export default function RoomPage() {
         copied={copied}
         onCopyLink={handleCopyLink}
         onMenuClick={() => setShowSidebar(!showSidebar)}
+        onLeave={handleLeave}
       />
 
       <div className="room-body">
