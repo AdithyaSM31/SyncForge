@@ -1270,3 +1270,23 @@ a:hover {
     min-width: 0;
   }
 }
+
+/* ============================================
+   Native App Overrides (Capacitor)
+   ============================================ */
+body.is-native .home-nav {
+  padding-top: max(calc(14px + env(safe-area-inset-top)), 46px);
+}
+
+body.is-native .room-header {
+  padding-top: max(env(safe-area-inset-top), 32px);
+  height: max(calc(48px + env(safe-area-inset-top)), 80px);
+}
+
+body.is-native .sidebar {
+  top: max(calc(48px + env(safe-area-inset-top)), 80px);
+}
+
+body.is-native .sidebar-overlay {
+  top: max(calc(48px + env(safe-area-inset-top)), 80px);
+}
