@@ -104,7 +104,7 @@ export default function CollaborativeEditor({ ydoc, provider, language, defaultC
         bracketPairColorization: { enabled: true },
         automaticLayout: true,
         wordWrap: 'on',
-        tabSize: 2,
+        tabSize: 4,
         suggestOnTriggerCharacters: true,
         quickSuggestions: true,
         formatOnPaste: true,

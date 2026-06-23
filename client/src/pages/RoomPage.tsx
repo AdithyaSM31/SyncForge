@@ -50,6 +50,7 @@ export default function RoomPage() {
   const [needsNickname, setNeedsNickname] = useState(false);
   const [nicknameInput, setNicknameInput] = useState('');
   const [copied, setCopied] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
   const ydocRef = useRef<Y.Doc | null>(null);
@@ -219,6 +220,14 @@ export default function RoomPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleCopyCode = () => {
+    if (roomInfo?.slug) {
+      navigator.clipboard.writeText(roomInfo.slug);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2000);
+    }
+  };
+
   // Nickname prompt
   if (needsNickname) {
     return (
@@ -332,8 +341,8 @@ export default function RoomPage() {
             <div className="sidebar-section-title">Share</div>
             <div className="share-link">
               <input className="share-link-input" value={roomInfo?.slug || ''} readOnly />
-              <button className="btn btn-ghost btn-icon" onClick={handleCopyLink} title="Copy link">
-                {copied ? '✓' : <Copy size={14} />}
+              <button className="btn btn-ghost btn-icon" onClick={handleCopyCode} title="Copy code">
+                {copiedCode ? '✓' : <Copy size={14} />}
               </button>
             </div>
           </div>
