@@ -56,18 +56,17 @@ export default function RoomHeader({ roomName, roomSlug, users, onRun, executing
         {/* Copy link button */}
         <button className="btn btn-ghost btn-sm" onClick={onCopyLink} title="Copy share link">
           {copied ? <Check size={14} /> : <Share2 size={14} />}
-          {copied ? 'Copied!' : 'Share'}
+          <span className="desktop-only">{copied ? 'Copied!' : 'Share'}</span>
         </button>
 
         {/* Run button */}
         <button
-          className="btn btn-primary btn-sm"
+          className="btn btn-primary btn-sm run-btn"
           onClick={onRun}
           disabled={executing}
-          style={{ minWidth: 80 }}
         >
           {executing ? <span className="spinner" style={{ width: 14, height: 14 }} /> : <Play size={14} />}
-          {executing ? 'Running...' : 'Run'}
+          <span className="desktop-only">{executing ? 'Running...' : 'Run'}</span>
         </button>
       </div>
     </div>

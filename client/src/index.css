@@ -1171,6 +1171,10 @@ a:hover {
   opacity: 1;
 }
 
+.run-btn {
+  min-width: 80px;
+}
+
 /* ============================================
    Responsive
    ============================================ */
@@ -1259,5 +1263,9 @@ a:hover {
   
   .input-pane {
     border-left: none;
+  }
+
+  .run-btn {
+    min-width: 0;
   }
 }
